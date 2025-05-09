@@ -31,7 +31,77 @@ Natural language interface for exploring NBA database.
 
 ## 🚀 Running Streamlit
 
+### Data Files:
+
+Simple Method (Recommended)
+- **src/data/nba_database.sql** : This file contains the SQL script to just upload the data straight to your server
+    - This will be much simpler and will bypass any glitches or uncoded changes to the tables (if any of my changes were at the csv level)
+
+Manual Method:
 ```bash
-# Navigate to the main directory
+ # Navigate to the utils director -> src/utils
+
+# You will need to run three files:
+
+# Collect the data
+python data_scrape.py
+
+# Perform cleaning
+python data_clean.py
+
+# Upload to server
+python sql_upload.py
+```
+
+Virtual Environment:
+
+### Virtual Environment
+
+#### Creating and Activating
+
+##### Windows
+```bash
+# Create virtual environment
+python -m venv venv
+
+# Activate virtual environment
+venv\Scripts\activate
+```
+
+##### macOS/Linux
+```bash
+# Create virtual environment
+python3 -m venv venv
+
+# Activate virtual environment
+source venv/bin/activate
+```
+
+#### Install Dependencies
+
+```bash
+# Install required packages
+pip install -r requirements.txt
+```
+
+#### Configurations:
+Change these values in your .env (in src/utils) file to match these variables inside src/utils/config.py
+
+- You WILL need all of these for the code to function
+```python
+DB_CONFIG = {
+    'host': os.getenv("DB_HOST"), # Hostname for your local SQL server
+    'user': os.getenv("DB_USER"), # Username for your local SQL Server
+    'password': os.getenv("DB_PASSWORD"), # Password for your local SQL server, should be in .env
+    'port': os.getenv("DB_PORT"), # Port number you chose for SQL server
+    'database': os.getenv("DB_NAME"), # Whatever the name of the database you uploaded the SQL files or converted csv files to on your SQL server
+}
+
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+```
+
+### Run the Application
+```bash
+# Make sure you are in the main directory
 python -m streamlit run main.py
 ```

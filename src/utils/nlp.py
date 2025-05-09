@@ -1,19 +1,30 @@
+"""
+nlp.py
+
+This file contains functions for cleaning the user's input and
+determining the intent of the query (schema exploration, data modification, or data query)
+"""
+
 import re
 
-def User_Input(input_string):
+
+def user_input(input_string):
     """
     Cleans the user's input and determines the intent of the query
     """
     input_clean = input_string.strip()
-    input_type = Determine_Intent(input_clean)
+    input_type = determine_intent(input_clean)
 
     return input_type, input_clean
 
-def Determine_Intent(user_input):
+
+def determine_intent(user_query):
     """
-    Determines the intent of the user's input (if it's a schema exploration or normal query - gets sent to Translation.py, if it's a data modification - gets sent to Modification.py)
+    Determines the intent of the user's input
+    If it's a schema exploration or normal query - gets sent to translation.py,
+    if it's a data modification - gets sent to modification.py
     """
-    user_input = user_input.lower()
+    user_query = user_query.lower()
 
     schema_patterns = [
         r'\b(what|which|show|list|display)\b.*(tables|schema|columns|fields|structure)\b',
@@ -23,8 +34,7 @@ def Determine_Intent(user_input):
         r'\b(primary key|keys).*(of|for|in)\s+(?:the\s+)?(\w+)',
         r'\b(sample|example)\b.*(data|rows).*(from|in)\b.*\btable\b',
         r'\bshow.*\bdata\b.*\bfrom\b',
-        r'\bgive.*\bsample\b.*\bfrom\b'
-    ]
+        r'\bgive.*\bsample\b.*\bfrom\b']
 
     modify_patterns = [
         r'\b(add|insert|create|put)\b',
@@ -33,11 +43,11 @@ def Determine_Intent(user_input):
     ]
 
     for patt in schema_patterns:
-        if re.search(patt, user_input):
+        if re.search(patt, user_query):
             return "schema_explore"
-    
+
     for patt in modify_patterns:
-        if re.search(patt, user_input):
+        if re.search(patt, user_query):
             return "data_modification"
-        
+
     return "data_query"
